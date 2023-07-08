@@ -14,6 +14,8 @@ The python code was initially generated in Postman using the url for a GET reque
 
 import pandas as pd
 import requests, json
+import streamlit as st
+
 
 games = [
 235990,
@@ -92,7 +94,7 @@ def process_get_request(game):
 
             game_dict[f"Num_{num_value}"] = throw_value
 
-            print(f"Number: {num_value} -- Darts thrown: {throw_value}")
+            # print(f"Number: {num_value} -- Darts thrown: {throw_value}")
 
         return game_dict
 
@@ -120,7 +122,30 @@ for game in games:
 df_games = pd.DataFrame(list_of_dicts)
 
 
-print("x")
+
 
 df_games.to_excel("Doubles training.xlsx",index=False)
+
+# --- Prepare data frames for use with streamlit
+
+# 1. Add a column totalling all the darts thrown in that session
+cols_to_sum = [n for n in list(df_games) if n.lower().startswith("num")]
+
+
+df_games['total_darts'] = df_games[cols_to_sum].sum(axis=1)
+
+# Best checkout percentage
+max_pc  = df_games['game_checkout_pc'].max()
+# No. of darts for best checkout percentage
+max_pc_num_darts =  df_games['total_darts'].min()
+
+print("x")
+# ------------ STREAMLIT CODE --------------------
+st.title("Doubles Practice")
+
+st.subheader(f"Practice sessions to date: {df_games.shape[0]}")
+st.subheader(f"Best visit")
+st.write(f"\tTotal darts to finish: {max_pc_num_darts}")
+st.write(f"\tCheckout percentage: {max_pc}%")
+
 
