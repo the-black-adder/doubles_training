@@ -52,14 +52,14 @@ def process_get_request(game):
         id = j["id"]
 
         game_type = j["settings"]
-        print(game_type)
+        # print(game_type)
 
         game_date = j["started_at"]
-        print(game_date)
+        # print(game_date)
 
 
         game_checkout_pc = j["users"][0]["checkout_rate"]
-        print(game_checkout_pc)
+        # print(game_checkout_pc)
 
         # add values to dictionary
         game_dict["id"] = id
@@ -122,8 +122,6 @@ for game in games:
 df_games = pd.DataFrame(list_of_dicts)
 
 
-
-
 df_games.to_excel("Doubles training.xlsx",index=False)
 
 # --- Prepare data frames for use with streamlit
@@ -131,8 +129,18 @@ df_games.to_excel("Doubles training.xlsx",index=False)
 # 1. Add a column totalling all the darts thrown in that session
 cols_to_sum = [n for n in list(df_games) if n.lower().startswith("num")]
 
-
 df_games['total_darts'] = df_games[cols_to_sum].sum(axis=1)
+
+# 2. Create a data frame of averages
+av_dict = {}
+for a in cols_to_sum:
+    av_dict[a.replace("Num_","")] = float("{:,.1f}".format(df_games[a].mean()))
+
+df_avg = pd.DataFrame(av_dict, index=['Average number of darts'])
+
+df_avg2 = df_avg.transpose()
+df_avg3 = df_avg2.sort_values('Average number of darts')
+# df_avg3['Average number of darts'].round(decimals=1)
 
 # Best checkout percentage
 max_pc  = df_games['game_checkout_pc'].max()
@@ -147,5 +155,7 @@ st.subheader(f"Practice sessions to date: {df_games.shape[0]}")
 st.subheader(f"Best visit")
 st.write(f"\tTotal darts to finish: {max_pc_num_darts}")
 st.write(f"\tCheckout percentage: {max_pc}%")
+st.subheader("Top 5 doubles")
+st.write(df_avg3.head(5))
 
 
