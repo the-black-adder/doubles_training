@@ -17,16 +17,6 @@ import requests, json
 import streamlit as st
 
 
-games = [
-235990,
-40342,
-235792,
-239605,
-240393,
-241939
-]
-
-
 def process_get_request(game):
 
     # df_game = pd.DataFrame(columns=col_list)
@@ -106,6 +96,16 @@ def process_get_request(game):
 # initialise empty list
 list_of_dicts = []
 
+games = [
+235990,
+40342,
+235792,
+239605,
+240393,
+241939,
+    246077
+]
+
 for game in games:
     xdict = process_get_request(game)
 
@@ -151,6 +151,7 @@ print("x")
 # ------------ STREAMLIT CODE --------------------
 st.title("Doubles Practice")
 
+st.image('double8.jpg')
 st.subheader(f"Practice sessions to date: {df_games.shape[0]}")
 st.subheader(f"Best visit")
 st.write(f"\tTotal darts to finish: {max_pc_num_darts}")
