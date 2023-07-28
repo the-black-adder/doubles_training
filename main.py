@@ -135,11 +135,17 @@ df_games['total_darts'] = df_games[cols_to_sum].sum(axis=1)
 # 2. Create a data frame of averages
 av_dict = {}
 for a in cols_to_sum:
-    av_dict[a.replace("Num_","")] = float("{:,.1f}".format(df_games[a].mean()))
+    av_dict[a.replace("Num_","")] = [float("{:,.1f}".format(df_games[a].mean())),float("{:,.1f}".format(df_games[a].std()))]
 
-df_avg = pd.DataFrame(av_dict, index=['Average number of darts'])
+df_avg = pd.DataFrame(av_dict)
+# index=['Average number of darts']
 
 df_avg2 = df_avg.transpose()
+
+# Changing column names with index number
+mapping = {df_avg2.columns[0]: 'Average number of darts', df_avg2.columns[1]: 'Std. Deviation'}
+df_avg2 = df_avg2.rename(columns=mapping)
+
 df_avg3 = df_avg2.sort_values('Average number of darts')
 # df_avg3['Average number of darts'].round(decimals=1)
 
@@ -159,5 +165,7 @@ st.write(f"\tTotal darts to finish: {max_pc_num_darts}")
 st.write(f"\tCheckout percentage: {max_pc}%")
 st.subheader("Top 5 doubles")
 st.write(df_avg3.head(5))
+st.subheader("Bottom 5 doubles")
+st.write(df_avg3.tail(5))
 
 
