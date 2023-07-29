@@ -9,6 +9,8 @@ See images in the project folder.
 
 The python code was initially generated in Postman using the url for a GET request.
 
+Change the
+
 """
 
 
