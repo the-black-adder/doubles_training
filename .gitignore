@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 .gitignore
+Doubles training.xlsx
 
 # C extensions
 *.so
